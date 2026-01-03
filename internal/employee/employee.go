@@ -8,5 +8,6 @@ type Employee struct {
 }
 
 func (e Employee) IsValid() bool {
-	return true
+	return e.FullName != ""
 }
+
