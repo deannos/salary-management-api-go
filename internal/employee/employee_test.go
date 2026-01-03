@@ -38,3 +38,15 @@ func TestEmployee_IsInvalid_WhenJobTitleMissing(t *testing.T) {
 		t.Fatalf("expected employee to be invalid when job title is missing")
 	}
 }
+
+func TestEmployee_IsInvalid_WhenCountryMissing(t *testing.T) {
+	e := Employee{
+		FullName: "Amish Jha",
+		JobTitle: "Engineer",
+		Salary:   1000,
+	}
+
+	if e.IsValid() {
+		t.Fatalf("expected employee to be invalid when country is missing")
+	}
+}
