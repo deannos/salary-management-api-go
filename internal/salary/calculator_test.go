@@ -17,3 +17,11 @@ func TestCalculateNetSalary_ForUnitedStates(t *testing.T) {
 		t.Fatalf("expected net salary 880, got %v", net)
 	}
 }
+
+func TestCalculateNetSalary_ForOtherCountries(t *testing.T) {
+	net := CalculateNetSalary("Germany", 1000)
+
+	if net != 1000 {
+		t.Fatalf("expected net salary 1000, got %v", net)
+	}
+}
