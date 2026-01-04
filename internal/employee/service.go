@@ -10,9 +10,16 @@ func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
 
-func (s *Service) Create(e Employee) (int64, error) {
+func validateEmployee(e Employee) error {
 	if !e.IsValid() {
-		return 0, errors.New("invalid employee")
+		return errors.New("invalid employee")
+	}
+	return nil
+}
+
+func (s *Service) Create(e Employee) (int64, error) {
+	if err := validateEmployee(e); err != nil {
+		return 0, err
 	}
 	return s.repo.Save(e)
 }
