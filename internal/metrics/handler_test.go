@@ -64,3 +64,50 @@ func TestCountryMetricsHandler(t *testing.T) {
 		t.Fatalf("expected avg 2000, got %v", resp["avg"])
 	}
 }
+
+func TestJobTitleMetricsHandler(t *testing.T) {
+	database, _ := db.NewInMemoryDB()
+	_, _ = database.Exec(`
+		CREATE TABLE employees (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			full_name TEXT,
+			job_title TEXT,
+			country TEXT,
+			salary REAL
+		)
+	`)
+
+	repo := employee.NewRepository(database)
+	service := employee.NewService(repo)
+
+	_, _ = service.Create(employee.Employee{
+		FullName: "A",
+		JobTitle: "Manager",
+		Country:  "US",
+		Salary:   4000,
+	})
+	_, _ = service.Create(employee.Employee{
+		FullName: "B",
+		JobTitle: "Manager",
+		Country:  "US",
+		Salary:   6000,
+	})
+
+	handler := NewHandler(database)
+
+	req := httptest.NewRequest(http.MethodGet, "/metrics/job-title/Manager", nil)
+	w := httptest.NewRecorder()
+
+	handler.GetJobTitleMetrics(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", w.Code)
+	}
+
+	var resp map[string]float64
+	json.NewDecoder(w.Body).Decode(&resp)
+
+	if resp["avg"] != 5000 {
+		t.Fatalf("expected avg 5000, got %v", resp["avg"])
+	}
+}
