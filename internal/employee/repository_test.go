@@ -53,7 +53,19 @@ func TestEmployeeRepository_SaveAndFindByID(t *testing.T) {
 
 	// Assertions
 	if saved.FullName != employee.FullName {
-		t.Fatalf("expected %s, got %s", employee.FullName, saved.FullName)
+		t.Fatalf("expected full name %s, got %s", employee.FullName, saved.FullName)
+	}
+
+	if saved.JobTitle != employee.JobTitle {
+		t.Fatalf("expected job title %s, got %s", employee.JobTitle, saved.JobTitle)
+	}
+
+	if saved.Country != employee.Country {
+		t.Fatalf("expected country %s, got %s", employee.Country, saved.Country)
+	}
+
+	if saved.Salary != employee.Salary {
+		t.Fatalf("expected salary %v, got %v", employee.Salary, saved.Salary)
 	}
 
 }
