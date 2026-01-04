@@ -1,6 +1,7 @@
 package employee
 
 type Employee struct {
+	ID       int64
 	FullName string
 	JobTitle string
 	Country  string
