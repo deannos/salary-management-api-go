@@ -2,6 +2,19 @@ package employee
 
 import "database/sql"
 
+const (
+	insertEmployeeQuery = `
+		INSERT INTO employees (full_name, job_title, country, salary)
+		VALUES (?, ?, ?, ?)
+	`
+
+	selectEmployeeByIDQuery string = `
+		SELECT id, full_name, job_title, country, salary
+		FROM employees
+		WHERE id = ?
+	`
+)
+
 type Repository struct {
 	db *sql.DB
 }
@@ -12,8 +25,7 @@ func NewRepository(db *sql.DB) *Repository {
 
 func (r *Repository) Save(e Employee) (int64, error) {
 	result, err := r.db.Exec(
-		`INSERT INTO employees (full_name, job_title, country, salary)
-		 VALUES (?, ?, ?, ?)`,
+		insertEmployeeQuery,
 		e.FullName,
 		e.JobTitle,
 		e.Country,
@@ -27,14 +39,16 @@ func (r *Repository) Save(e Employee) (int64, error) {
 }
 
 func (r *Repository) FindByID(id int64) (Employee, error) {
-	row := r.db.QueryRow(
-		`SELECT id, full_name, job_title, country, salary
-		 FROM employees WHERE id = ?`, id,
-	)
+	row := r.db.QueryRow(selectEmployeeByIDQuery, id)
 
 	var e Employee
-	err := row.Scan(&e.ID, &e.FullName, &e.JobTitle, &e.Country, &e.Salary)
-	if err != nil {
+	if err := row.Scan(
+		&e.ID,
+		&e.FullName,
+		&e.JobTitle,
+		&e.Country,
+		&e.Salary,
+	); err != nil {
 		return Employee{}, err
 	}
 
