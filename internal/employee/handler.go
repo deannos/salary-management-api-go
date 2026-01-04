@@ -54,3 +54,7 @@ func (h *Handler) GetEmployee(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(e)
 }
+
+func (h *Handler) GetEmployeeSalary(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
