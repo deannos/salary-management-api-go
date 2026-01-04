@@ -10,8 +10,6 @@ type Employee struct {
 func (e Employee) IsValid() bool {
 	return e.FullName != "" &&
 		e.JobTitle != "" &&
-		e.Country != ""
+		e.Country != "" &&
+		e.Salary > 0
 }
-
-
-
