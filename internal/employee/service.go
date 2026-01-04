@@ -16,3 +16,7 @@ func (s *Service) Create(e Employee) (int64, error) {
 	}
 	return s.repo.Save(e)
 }
+
+func (s *Service) GetByID(id int64) (Employee, error) {
+	return s.repo.FindByID(id)
+}

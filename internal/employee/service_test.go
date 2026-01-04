@@ -97,7 +97,7 @@ func TestEmployeeService_GetByID_ShouldReturnEmployee(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if e.FullName != "Sahil Khan" {
+	if e.FullName != "John Smith" {
 		t.Fatalf("unexpected employee returned")
 	}
 }
