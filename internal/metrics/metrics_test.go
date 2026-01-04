@@ -65,3 +65,44 @@ func TestSalaryMetrics_ByCountry(t *testing.T) {
 		t.Fatalf("expected avg 2000, got %v", result.Avg)
 	}
 }
+
+func TestSalaryMetrics_ByJobTitle(t *testing.T) {
+	database, _ := db.NewInMemoryDB()
+
+	_, _ = database.Exec(`
+		CREATE TABLE employees (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			full_name TEXT,
+			job_title TEXT,
+			country TEXT,
+			salary REAL
+		)
+	`)
+
+	repo := employee.NewRepository(database)
+	service := employee.NewService(repo)
+
+	_, _ = service.Create(employee.Employee{
+		FullName: "A",
+		JobTitle: "Manager",
+		Country:  "US",
+		Salary:   4000,
+	})
+	_, _ = service.Create(employee.Employee{
+		FullName: "B",
+		JobTitle: "Manager",
+		Country:  "US",
+		Salary:   6000,
+	})
+
+	metrics := NewService(database)
+
+	avg, err := metrics.AverageByJobTitle("Manager")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if avg != 5000 {
+		t.Fatalf("expected avg 5000, got %v", avg)
+	}
+}
