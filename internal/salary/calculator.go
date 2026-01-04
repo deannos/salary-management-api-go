@@ -1,8 +1,11 @@
 package salary
 
+import "math"
+
 func CalculateNetSalary(country string, gross float64) float64 {
 	deductionRate := deductionRateFor(country)
-	return gross * (1 - deductionRate)
+	net := gross * (1 - deductionRate)
+	return roundToTwoDecimals(net)
 }
 
 func deductionRateFor(country string) float64 {
@@ -14,4 +17,8 @@ func deductionRateFor(country string) float64 {
 	default:
 		return 0.0
 	}
+}
+
+func roundToTwoDecimals(value float64) float64 {
+	return math.Round(value*100) / 100
 }
