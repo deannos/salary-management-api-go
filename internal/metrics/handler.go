@@ -33,3 +33,18 @@ func (h *Handler) GetCountryMetrics(w http.ResponseWriter, r *http.Request) {
 		"avg": result.Avg,
 	})
 }
+
+func (h *Handler) GetJobTitleMetrics(w http.ResponseWriter, r *http.Request) {
+	title := strings.TrimPrefix(r.URL.Path, "/metrics/job-title/")
+
+	avg, err := h.service.AverageByJobTitle(title)
+	if err != nil {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]float64{
+		"avg": avg,
+	})
+}
