@@ -17,5 +17,20 @@ type CountrySalaryMetrics struct {
 }
 
 func (s *Service) ByCountry(country string) (CountrySalaryMetrics, error) {
-	return CountrySalaryMetrics{}, nil
+	row := s.db.QueryRow(`
+		SELECT 
+			MIN(salary),
+			MAX(salary),
+			AVG(salary)
+		FROM employees
+		WHERE country = ?
+	`, country)
+
+	var result CountrySalaryMetrics
+	err := row.Scan(&result.Min, &result.Max, &result.Avg)
+	if err != nil {
+		return CountrySalaryMetrics{}, err
+	}
+
+	return result, nil
 }
