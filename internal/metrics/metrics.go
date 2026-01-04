@@ -34,3 +34,18 @@ func (s *Service) ByCountry(country string) (CountrySalaryMetrics, error) {
 
 	return result, nil
 }
+
+func (s *Service) AverageByJobTitle(title string) (float64, error) {
+	row := s.db.QueryRow(`
+		SELECT AVG(salary)
+		FROM employees
+		WHERE job_title = ?
+	`, title)
+
+	var avg float64
+	if err := row.Scan(&avg); err != nil {
+		return 0, err
+	}
+
+	return avg, nil
+}
