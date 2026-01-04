@@ -84,3 +84,12 @@ func (h *Handler) GetEmployeeSalary(w http.ResponseWriter, r *http.Request) {
 		"deduction": deduction,
 	})
 }
+
+func (h *Handler) EmployeeRoutes(w http.ResponseWriter, r *http.Request) {
+	if strings.HasSuffix(r.URL.Path, "/salary") {
+		h.GetEmployeeSalary(w, r)
+		return
+	}
+
+	h.GetEmployee(w, r)
+}

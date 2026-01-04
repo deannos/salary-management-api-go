@@ -32,7 +32,7 @@ func main() {
 	handler := employee.NewHandler(service)
 
 	http.HandleFunc("/employees", handler.CreateEmployee)
-	http.HandleFunc("/employees/", handler.GetEmployee)
+	http.HandleFunc("/employees/", handler.EmployeeRoutes)
 
 	log.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
