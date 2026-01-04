@@ -46,3 +46,25 @@ func TestEmployeeService_Create_ShouldPersistEmployee(t *testing.T) {
 		t.Fatalf("expected non-zero employee id")
 	}
 }
+
+func TestEmployeeService_Create_ShouldFailForInvalidEmployee(t *testing.T) {
+	database, _ := db.NewInMemoryDB()
+
+	_, _ = database.Exec(`
+		CREATE TABLE employees (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			full_name TEXT,
+			job_title TEXT,
+			country TEXT,
+			salary REAL
+		)
+	`)
+
+	repo := NewRepository(database)
+	service := NewService(repo)
+
+	_, err := service.Create(Employee{})
+	if err == nil {
+		t.Fatalf("expected error for invalid employee")
+	}
+}
