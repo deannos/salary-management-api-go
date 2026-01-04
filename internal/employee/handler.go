@@ -33,3 +33,7 @@ func (h *Handler) CreateEmployee(w http.ResponseWriter, r *http.Request) {
 		"id": id,
 	})
 }
+
+func (h *Handler) GetEmployee(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
