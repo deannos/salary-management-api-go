@@ -7,13 +7,31 @@ import (
 )
 
 func TestEmployeeRepository_SaveAndFindByID(t *testing.T) {
+
+	// Create in-memory database
 	database, err := db.NewInMemoryDB()
 	if err != nil {
 		t.Fatalf("failed to create database: %v", err)
 	}
 
+	// 2. Create employees table
+	_, err = database.Exec(`
+		CREATE TABLE employees (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			full_name TEXT,
+			job_title TEXT,
+			country TEXT,
+			salary REAL
+		)
+	`)
+	if err != nil {
+		t.Fatalf("failed to create table: %v", err)
+	}
+
+	// Create repository
 	repo := NewRepository(database)
 
+	// Test data
 	employee := Employee{
 		FullName: "Amish Jha",
 		JobTitle: "Engineer",
@@ -21,16 +39,19 @@ func TestEmployeeRepository_SaveAndFindByID(t *testing.T) {
 		Salary:   1000,
 	}
 
+	// Save employee
 	id, err := repo.Save(employee)
 	if err != nil {
 		t.Fatalf("unexpected error saving employee: %v", err)
 	}
 
+	// Fetch employee
 	saved, err := repo.FindByID(id)
 	if err != nil {
 		t.Fatalf("unexpected error finding employee: %v", err)
 	}
 
+	// Assertions
 	if saved.FullName != employee.FullName {
 		t.Fatalf("expected %s, got %s", employee.FullName, saved.FullName)
 	}
