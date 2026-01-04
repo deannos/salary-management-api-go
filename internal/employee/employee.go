@@ -1,11 +1,11 @@
 package employee
 
 type Employee struct {
-	ID       int64
-	FullName string
-	JobTitle string
-	Country  string
-	Salary   float64
+	ID       int64   `json:"id,omitempty"`
+	FullName string  `json:"full_name"`
+	JobTitle string  `json:"job_title"`
+	Country  string  `json:"country"`
+	Salary   float64 `json:"salary"`
 }
 
 func (e Employee) IsValid() bool {
