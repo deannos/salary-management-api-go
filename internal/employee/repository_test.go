@@ -6,7 +6,7 @@ import (
 	"github.com/deannos/incubyte-sm-kata-deannos/internal/db"
 )
 
-func TestEmployeeRepository(t *testing.T) {
+func TestEmployeeRepository_SaveAndFindByID(t *testing.T) {
 	database, err := db.NewInMemoryDB()
 	if err != nil {
 		t.Fatalf("failed to create database: %v", err)
