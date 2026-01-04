@@ -1,11 +1,17 @@
 package salary
 
 func CalculateNetSalary(country string, gross float64) float64 {
-	if country == "India" {
-		return gross * 0.9
+	deductionRate := deductionRateFor(country)
+	return gross * (1 - deductionRate)
+}
+
+func deductionRateFor(country string) float64 {
+	switch country {
+	case "India":
+		return 0.10
+	case "United States":
+		return 0.12
+	default:
+		return 0.0
 	}
-	if country == "United States" {
-		return gross * 0.88
-	}
-	return gross
 }
