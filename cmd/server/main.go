@@ -6,6 +6,7 @@ import (
 
 	"github.com/deannos/incubyte-sm-kata-deannos/internal/db"
 	"github.com/deannos/incubyte-sm-kata-deannos/internal/employee"
+	"github.com/deannos/incubyte-sm-kata-deannos/internal/metrics"
 )
 
 func main() {
@@ -33,6 +34,11 @@ func main() {
 
 	http.HandleFunc("/employees", handler.CreateEmployee)
 	http.HandleFunc("/employees/", handler.EmployeeRoutes)
+
+	metricsHandler := metrics.NewHandler(database)
+
+	http.HandleFunc("/metrics/country/", metricsHandler.GetCountryMetrics)
+	http.HandleFunc("/metrics/job-title/", metricsHandler.GetJobTitleMetrics)
 
 	log.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
