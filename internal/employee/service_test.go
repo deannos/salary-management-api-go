@@ -68,3 +68,36 @@ func TestEmployeeService_Create_ShouldFailForInvalidEmployee(t *testing.T) {
 		t.Fatalf("expected error for invalid employee")
 	}
 }
+
+func TestEmployeeService_GetByID_ShouldReturnEmployee(t *testing.T) {
+	database, _ := db.NewInMemoryDB()
+
+	_, _ = database.Exec(`
+		CREATE TABLE employees (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			full_name TEXT,
+			job_title TEXT,
+			country TEXT,
+			salary REAL
+		)
+	`)
+
+	repo := NewRepository(database)
+	service := NewService(repo)
+
+	id, _ := service.Create(Employee{
+		FullName: "John Smith",
+		JobTitle: "Manager",
+		Country:  "US",
+		Salary:   3000,
+	})
+
+	e, err := service.GetByID(id)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if e.FullName != "Sahil Khan" {
+		t.Fatalf("unexpected employee returned")
+	}
+}
