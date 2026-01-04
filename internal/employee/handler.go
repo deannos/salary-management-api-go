@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/deannos/incubyte-sm-kata-deannos/internal/salary"
 )
 
 type Handler struct {
@@ -56,5 +58,29 @@ func (h *Handler) GetEmployee(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetEmployeeSalary(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimPrefix(r.URL.Path, "/employees/")
+	idPart := strings.TrimSuffix(path, "/salary")
+
+	id, err := strconv.ParseInt(idPart, 10, 64)
+	if err != nil {
+		http.Error(w, "invalid id", http.StatusBadRequest)
+		return
+	}
+
+	e, err := h.service.GetByID(id)
+	if err != nil {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+
+	net := salary.CalculateNetSalary(e.Country, e.Salary)
+	deduction := e.Salary - net
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]float64{
+		"gross":     e.Salary,
+		"net":       net,
+		"deduction": deduction,
+	})
 }
