@@ -2,6 +2,23 @@ package metrics
 
 import "database/sql"
 
+const (
+	countryMetricsQuery = `
+		SELECT 
+			MIN(salary),
+			MAX(salary),
+			AVG(salary)
+		FROM employees
+		WHERE country = ?
+	`
+
+	jobTitleAverageQuery = `
+		SELECT AVG(salary)
+		FROM employees
+		WHERE job_title = ?
+	`
+)
+
 type Service struct {
 	db *sql.DB
 }
@@ -17,18 +34,10 @@ type CountrySalaryMetrics struct {
 }
 
 func (s *Service) ByCountry(country string) (CountrySalaryMetrics, error) {
-	row := s.db.QueryRow(`
-		SELECT 
-			MIN(salary),
-			MAX(salary),
-			AVG(salary)
-		FROM employees
-		WHERE country = ?
-	`, country)
+	row := s.db.QueryRow(countryMetricsQuery, country)
 
 	var result CountrySalaryMetrics
-	err := row.Scan(&result.Min, &result.Max, &result.Avg)
-	if err != nil {
+	if err := row.Scan(&result.Min, &result.Max, &result.Avg); err != nil {
 		return CountrySalaryMetrics{}, err
 	}
 
@@ -36,11 +45,7 @@ func (s *Service) ByCountry(country string) (CountrySalaryMetrics, error) {
 }
 
 func (s *Service) AverageByJobTitle(title string) (float64, error) {
-	row := s.db.QueryRow(`
-		SELECT AVG(salary)
-		FROM employees
-		WHERE job_title = ?
-	`, title)
+	row := s.db.QueryRow(jobTitleAverageQuery, title)
 
 	var avg float64
 	if err := row.Scan(&avg); err != nil {
