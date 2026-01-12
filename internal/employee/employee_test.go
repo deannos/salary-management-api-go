@@ -63,3 +63,16 @@ func TestEmployee_IsInvalid_WhenSalaryIsZeroOrNegative(t *testing.T) {
 		t.Fatalf("expected employee to be invalid when salary is zero or negative")
 	}
 }
+
+func TestEmployee_IsInvalid_WhenIndianSalaryExceedsLimit(t *testing.T) {
+	e := Employee{
+		FullName: "Amish Jha",
+		JobTitle: "Engineer",
+		Country:  "India",
+		Salary:   100000,
+	}
+
+	if e.IsValid() {
+		t.Fatalf("expected employee to be invalid when Indian salary exceeds limit")
+	}
+}
