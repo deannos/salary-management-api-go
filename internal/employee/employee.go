@@ -9,10 +9,17 @@ type Employee struct {
 }
 
 func (e Employee) IsValid() bool {
-	return hasText(e.FullName) &&
-		hasText(e.JobTitle) &&
-		hasText(e.Country) &&
-		e.Salary > 0
+	if !hasText(e.FullName) ||
+		!hasText(e.JobTitle) ||
+		!hasText(e.Country) ||
+		e.Salary <= 0 {
+		return false
+	}
+
+	if e.Country == "India" && e.Salary >= 100000 {
+		return false
+	}
+	return true
 }
 
 func hasText(s string) bool {
