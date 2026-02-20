@@ -232,7 +232,7 @@ go test ./...
 go run cmd/server/main.go
 ```
 
-- The server will start on: http://localhost:8080
+- The server will start on: http://localhost:8080 or http://localhost:8080
 
 You can test the health of the API or proceed to create an employee using the endpoints listed above.
 
